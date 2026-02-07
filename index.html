@@ -1,0 +1,369 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Happy Rose Day</title>
+
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@300;500;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Poppins", sans-serif;
+      }
+
+      body {
+        height: 100vh;
+        overflow: hidden;
+        background: linear-gradient(-45deg, #ff4d6d, #ff85a1, #b5179e, #7209b7);
+        background-size: 400% 400%;
+        animation: gradient 10s ease infinite;
+      }
+
+      /* Gradient animation */
+      @keyframes gradient {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+
+      /* Glass Card */
+      .center-card {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        backdrop-filter: blur(15px);
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 20px;
+        padding: 40px 60px;
+        text-align: center;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      }
+
+      /* Heading */
+      .center-card h1 {
+        font-family: "Great Vibes", cursive;
+        font-size: 70px;
+        color: #fff;
+        animation: glow 2s ease-in-out infinite alternate;
+      }
+
+      @keyframes glow {
+        from {
+          text-shadow: 0 0 10px #fff;
+        }
+        to {
+          text-shadow: 0 0 30px #ffccd5;
+        }
+      }
+
+      .center-card p {
+        margin-top: 10px;
+        color: #fff;
+        opacity: 0.9;
+      }
+
+      /* Roses */
+      .rose {
+        position: absolute;
+        font-size: 60px; /* BIG clickable rose */
+        animation: float 20s linear infinite; /* slow & smooth */
+        cursor: pointer;
+        user-select: none;
+      }
+
+      .rose:hover {
+        filter: drop-shadow(0 0 20px pink);
+        transform: scale(1.1);
+      }
+
+      @keyframes float {
+        from {
+          transform: translateY(100vh) rotate(0deg);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(-120vh) rotate(360deg);
+          opacity: 1;
+        }
+      }
+
+      /* Popup */
+      .popup {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(0.8);
+        width: 500px;
+        height: 500px;
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        cursor: default;
+        text-align: center;
+        font-family: "Poppins", sans-serif;
+      }
+
+      .popup .heart {
+        font-size: 500px; /* big heart */
+        display: block;
+        line-height: 1;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+
+      .popup .line {
+        position: absolute;
+        width: 80%;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 24px;
+        font-weight: 600;
+        color: #fff;
+        text-shadow: 0 0 10px #ff69b4;
+      }
+
+      #enterScreen {
+        position: fixed;
+        inset: 0;
+        background: linear-gradient(135deg, #ff4d6d, #ff9f1c);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 999;
+        cursor: pointer;
+      }
+
+      #enterScreen h1 {
+        font-size: 2.2rem;
+        text-align: center;
+        animation: pulse 2s infinite;
+      }
+
+      @keyframes pulse {
+        0% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.08);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+
+      @keyframes floatHeart {
+        from {
+          transform: translate(-50%, -50%) scale(1);
+          opacity: 1;
+        }
+        to {
+          transform: translate(-50%, -150%) scale(0.5);
+          opacity: 0;
+        }
+      }
+
+      .card-text {
+        font-size: 1.5rem;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="enterScreen">
+      <h1>Tap once 🌹<br />Something beautiful is waiting</h1>
+    </div>
+
+    <!-- Music -->
+    <audio id="bgMusic" autoplay muted loop>
+      <source src="Song.mpeg" type="audio/mpeg" />
+    </audio>
+
+    <!-- Center Card -->
+    <div class="center-card">
+      <h1>Happy Rose Day</h1>
+      <p id="nameText"></p>
+      <p class="card-text">Catch the roses for me</p>
+    </div>
+
+    <!-- Popup -->
+    <div class="popup" id="popup">
+      <span class="heart">💖</span>
+      <span class="line" id="lineText"></span>
+    </div>
+
+    <script>
+      // Get name from URL: ?name=Shubham
+      const params = new URLSearchParams(window.location.search);
+      const receiverName = params.get("name") || "Friend"; // default "Friend" if no name provided
+      document.getElementById("nameText").innerText =
+        `For You, ${receiverName} 🌹`;
+
+      const enter = document.getElementById("enterScreen");
+      const music = document.getElementById("bgMusic");
+
+      /* Pickup lines */
+      const lines = [
+        "You're like the missing rose in my garden 🌹",
+        "Zindagi ke garden mein tum sabse khubsurat phool ho 🌸",
+        "Life is better when you laugh with me 😄",
+        "Har din tumhare saath special lagta hai ✨",
+        "Even flowers get jealous of your glow 💖",
+        "Tumhari muskaan mere din ka highlight hai 😌",
+        "You make ordinary moments extraordinary 🌟",
+        "Dil se dosti ya pyaar dono mein tum top ho ❤️",
+        "Roses fade, but our memories never 🌹",
+        "Humari dosti ka magic sabse alag hai ✨",
+        "Every time I see you, the world feels brighter 🌞",
+        "Tum ho toh har jagah chamak hai 💫",
+        "Life without you is like coffee without sugar ☕",
+        "Saath ho tum, toh tension bhi sweet lagti hai 😎",
+        "You're the reason smiles exist 😊",
+        "Tumhari baatein sunke dil khush ho jaata hai 💛",
+        "If happiness had a face, it would be yours 🌸",
+        "Dosti tumse hi perfect lagti hai ❤️",
+        "Roses are red, violets are blue, dosti aur maza sab hai with you 🌹",
+        "Tumhare saath waqt beetana sabse pyara lagta hai 💖",
+      ];
+
+      /* Create floating roses */
+      const totalRoses = 16; // Max roses on screen at once
+
+      function spawnRose() {
+        const rose = document.createElement("div");
+        rose.className = "rose";
+        rose.innerText = "🌹";
+
+        // Random horizontal position
+        rose.style.left = Math.random() * 100 + "vw";
+
+        // Random animation speed
+        rose.style.animationDuration = 18 + Math.random() * 10 + "s";
+
+        // Start rose slightly below the screen
+        rose.style.top = "100vh";
+
+        // Click action
+        rose.onclick = showLine;
+
+        document.body.appendChild(rose);
+
+        // Remove rose after it floats off the top
+        setTimeout(
+          () => rose.remove(),
+          parseFloat(rose.style.animationDuration) * 1000,
+        );
+      }
+
+      // Spawn initial roses with gaps
+      for (let i = 0; i < totalRoses; i++) {
+        setTimeout(spawnRose, i * 1000); // 1 second gap between initial roses
+      }
+
+      // Keep spawning roses continuously
+      setInterval(spawnRose, 1000); // Spawn a new rose every 2.5 seconds
+
+      /* Popup function */
+      let clickCount = 0;
+
+      function showLine() {
+        clickCount++;
+        const popup = document.getElementById("popup");
+        const lineText = document.getElementById("lineText");
+
+        lineText.innerText = lines[Math.floor(Math.random() * lines.length)];
+        popup.style.display = "flex";
+        popup.style.opacity = "1";
+        popup.style.transform = "translate(-50%, -50%) scale(0.8)";
+
+        // Simple pop animation
+        popup.animate(
+          [
+            { transform: "translate(-50%, -50%) scale(0.5)", opacity: 0 },
+            { transform: "translate(-50%, -50%) scale(1.2)", opacity: 1 },
+            { transform: "translate(-50%, -50%) scale(1)", opacity: 1 },
+          ],
+          { duration: 600, easing: "ease-out" },
+        );
+
+        setTimeout(() => {
+          popup.style.transition = "opacity 0.5s ease";
+          popup.style.opacity = "0";
+        }, 2200);
+
+        setTimeout(() => {
+          popup.style.display = "none";
+          popup.style.opacity = "1";
+        }, 3000);
+
+        // Secret message after 7 clicks
+        if (clickCount === 7) setTimeout(showSecret, 3200);
+
+        createHearts();
+      }
+
+      function createHearts() {
+        for (let i = 0; i < 6; i++) {
+          const heart = document.createElement("div");
+          heart.innerText = "💖";
+          heart.style.position = "fixed";
+          heart.style.left = "50%";
+          heart.style.top = "50%";
+          heart.style.fontSize = "30px";
+          heart.style.animation = "floatHeart 2s ease forwards";
+
+          document.body.appendChild(heart);
+
+          setTimeout(() => heart.remove(), 2000);
+        }
+      }
+
+      /* Tap-to-enter autoplay fix */
+      enter.addEventListener(
+        "click",
+        () => {
+          music.muted = false;
+          music.volume = 0;
+          music.play();
+          enter.remove();
+
+          let vol = 0;
+          const fade = setInterval(() => {
+            if (vol < 0.6) {
+              vol += 0.05;
+              music.volume = vol;
+            } else {
+              clearInterval(fade);
+            }
+          }, 200);
+        },
+        { once: true },
+      );
+
+      function showSecret() {
+        const lineText = document.getElementById("lineText");
+        lineText.innerText =
+          "🌹 Secret unlocked 🌹\nYou make my world brighter every day ❤️";
+        const popup = document.getElementById("popup");
+        popup.style.display = "flex";
+      }
+    </script>
+  </body>
+</html>
