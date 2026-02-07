@@ -282,6 +282,7 @@
 
       /* Popup function */
       let clickCount = 0;
+      let popupTimer;
 
       function showLine() {
         clickCount++;
@@ -291,30 +292,30 @@
         lineText.innerText = lines[Math.floor(Math.random() * lines.length)];
         popup.style.display = "flex";
         popup.style.opacity = "1";
-        popup.style.transform = "translate(-50%, -50%) scale(0.8)";
+        popup.style.transform = "translate(-50%, -50%) scale(1.2)";
+
+        if (popupTimer) clearTimeout(popupTimer);
+
+        // Animate scale back to normal
+        setTimeout(() => {
+          popup.style.transition = "transform 0.3s ease, opacity 0.3s ease";
+          popup.style.transform = "translate(-50%, -50%) scale(1)";
+        }, 50);
 
         // Simple pop animation
-        popup.animate(
-          [
-            { transform: "translate(-50%, -50%) scale(0.5)", opacity: 0 },
-            { transform: "translate(-50%, -50%) scale(1.2)", opacity: 1 },
-            { transform: "translate(-50%, -50%) scale(1)", opacity: 1 },
-          ],
-          { duration: 600, easing: "ease-out" },
-        );
-
-        setTimeout(() => {
+        popupTimer = setTimeout(() => {
           popup.style.transition = "opacity 0.5s ease";
           popup.style.opacity = "0";
-        }, 2200);
 
-        setTimeout(() => {
-          popup.style.display = "none";
-          popup.style.opacity = "1";
-        }, 3000);
+          // Completely hide after fade-out
+          setTimeout(() => {
+            popup.style.display = "none";
+            popup.style.transition = ""; // reset
+          }, 500);
+        }, 2500);
 
         // Secret message after 7 clicks
-        if (clickCount === 7) setTimeout(showSecret, 3200);
+        if (clickCount === 7) setTimeout(showSecret, 2800);
 
         createHearts();
       }
